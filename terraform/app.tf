@@ -9,7 +9,7 @@ variable "team-name" {
 }
 
 resource "aws_instance" "web" {
-  ami           = "ami-09a0bc77e5a0ec817"
+  ami           = "ami-0d6e8758b9f426d84"
   instance_type = "t3.micro"
 
   tags = {
