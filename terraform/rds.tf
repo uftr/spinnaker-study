@@ -28,13 +28,7 @@ resource "aws_instance" "web" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t3.micro"
 
-  user_data = << EOF
-    #! /bin/bash
-    sudo apt-get update
-    wget http://nexus.mygurukulam.org:8081/repository/mild-temper-microservice/pool/s/spinnaker-study/spinnaker-study_1.27_all.deb
-    sudo dpkg -i spinnaker-study_1.27_all.deb || true
-    sudo apt-get install -f 
-  EOF
+  user_data = "${file("install_app.sh")}"
 
   tags = {
     Name = var.team-name
