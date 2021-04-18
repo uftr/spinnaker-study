@@ -36,7 +36,7 @@ node {
 		sh "aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 702037529261.dkr.ecr.us-west-2.amazonaws.com"
 	}
 	stage('Push to ECR') {
-		docker.withRegistry('https://702037529261.dkr.ecr.us-west-2.amazonaws.com', 'spinnaker-registry') {
+		docker.withRegistry('https://702037529261.dkr.ecr.us-west-2.amazonaws.com', '') {
 			docker.image('${JOB_NAME}').push('${BUILD_ID}')
 	   }
 	}
