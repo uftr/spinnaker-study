@@ -25,6 +25,7 @@ node {
            sh "echo ${NEXUS_PASSWORD}"
            sh "curl -u ${NEXUS_ADMIN}:${NEXUS_PASSWORD} -H 'Content-Type: multipart/form-data' --data-binary '@./target/spinnaker-study_1.27_all.deb' 'http://nexus.mygurukulam.org:8081/repository/mild-temper-microservice/'"
        }
+	}
 	stage('Write properties') {
 	    sh "> spinnaker.properties"
 	    sh "echo 'JOB_NAME=${JOB_NAME}' >> spinnaker.properties"
