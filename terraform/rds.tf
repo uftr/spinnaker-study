@@ -8,36 +8,43 @@ variable "team-name" {
   default     = "default-team-name"
 }
 
-resource "aws_db_instance" "microservice-db" {
-  allocated_storage    = 10
-  engine               = "mysql"
-  engine_version       = "5.7"
-  instance_class       = "db.t3.micro"
-  name                 = "${replace(var.team-name, "-", "")}db"
-  username             = "admin"
-  password             = "thermalsKeepMeWarm"
-  parameter_group_name = "default.mysql5.7"
-  skip_final_snapshot  = true
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"] # Canonical
 }
 
-output "db_name" {
-  value       = aws_db_instance.microservice-db.name
-  description = "Name of the instance"
+resource "aws_instance" "web" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t3.micro"
+
+  tags = {
+    Name = var.team-name
+  }
 }
 
-output "db_username" {
-  value       = aws_db_instance.microservice-db.username
-  description = "username for the instance"
+output "public_ip" {
+  value       = aws_instance.web.public_ip
+  description = "Public IP of the instance"
 }
 
-output "db_secret" {
-  value       = aws_db_instance.microservice-db.password
-  description = "secret for the instance"
-}
-
-output "db_address" {
-  value       = aws_db_instance.microservice-db.address
-  description = "address for the instance"
+terraform {
+   backend "s3" {
+ # Replace this with your bucket name!
+   bucket         = "ot-infra-state"
+   key            = "global/s3/terraform.tfstate"
+   region         = "us-east-1"
+   }
 }
 
 #
