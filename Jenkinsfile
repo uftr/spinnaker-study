@@ -40,4 +40,14 @@ node {
 			docker.image('${JOB_NAME}').push('${BUILD_ID}')
 	   }
 	}
+	stage("Building Terraform Code Image") {
+		dir("terraform") {
+			docker.build('${JOB_NAME}-terraform', '-f Dockerfile .')
+		}
+	}
+	stage("Pushing Terraform Image to ECR") {
+		docker.withRegistry('https://702037529261.dkr.ecr.us-west-2.amazonaws.com', '') {
+			docker.image('${JOB_NAME}-terraform').push('${BUILD_ID}')
+	   }
+	}
 }
