@@ -5,6 +5,9 @@ node {
 	stage('Build Project') {
       sh './mvnw clean package'
 	}
+	stage("Archiving debian package artifact") {
+		archiveArtifacts artifacts: 'target/*.deb'
+	}
 	stage('Build Container') {
 		docker.build('${JOB_NAME}', '-f src/main/docker/Dockerfile.jvm .')
 	}
@@ -17,11 +20,19 @@ node {
           s3Upload(file:'quarkus-microservice-chart.tar.gz', bucket:'opstree-helm-charts', path:"${JOB_NAME}/${BUILD_ID}/quarkus-microservice-chart.tar.gz")
         }
 	}
+	stage('Publish deb to Nexus') {
+	   withCredentials([usernamePassword(credentialsId: 'nexus_passphrase', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_ADMIN')]) {
+           sh "echo ${NEXUS_PASSWORD}"
+           sh "curl -u ${NEXUS_ADMIN}:${NEXUS_PASSWORD} -H 'Content-Type: multipart/form-data' --data-binary '@./target/spinnaker-study_1.27_all.deb' 'http://nexus.mygurukulam.org:8081/repository/mild-temper-microservice/'"
+       }
 	stage('Write properties') {
 	    sh "> spinnaker.properties"
 	    sh "echo 'JOB_NAME=${JOB_NAME}' >> spinnaker.properties"
 	    sh "echo 'BUILD_ID=${BUILD_ID}' >> spinnaker.properties"
 	    archiveArtifacts artifacts: 'spinnaker.properties', fingerprint: true
+	}
+	stage("Updating ECR login token") {
+		sh "aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 702037529261.dkr.ecr.us-west-2.amazonaws.com"
 	}
 	stage('Push to ECR') {
 		docker.withRegistry('https://702037529261.dkr.ecr.us-west-2.amazonaws.com', 'spinnaker-registry') {
