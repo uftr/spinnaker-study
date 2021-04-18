@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-    name: mild-temper-terraform-rds
+    name: mild-temper-terraform-app
     namespace: microservices
 spec:
     template:
@@ -9,7 +9,7 @@ spec:
             namespace: microservices
         spec:
             containers:
-                -   name: mild-temper-terraform-rds
+                -   name: mild-temper-terraform-app
                     image: 702037529261.dkr.ecr.us-west-2.amazonaws.com/mild-temper-microservice-terraform
                     env:
                     -   name: AWS_ACCESS_KEY_ID
