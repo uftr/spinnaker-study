@@ -8,27 +8,9 @@ variable "team-name" {
   default     = "default-team-name"
 }
 
-data "aws_ami" "ubuntu" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["099720109477"] # Canonical
-}
-
 resource "aws_instance" "web" {
-  ami           = data.aws_ami.ubuntu.id
+  ami           = "ami-09a0bc77e5a0ec817"
   instance_type = "t3.micro"
-
-  user_data = "${file("install_app.sh")}"
 
   tags = {
     Name = var.team-name
@@ -49,7 +31,6 @@ terraform {
    }
 }
 
-#
 #resource "aws_s3_bucket" "terraform_state" {
 #  bucket = "${team_name}-terraform-state"
 #

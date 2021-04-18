@@ -24,5 +24,7 @@ spec:
                                 key: AWS_SECRET_ACCESS_KEY
                     -   name: TF_VAR_team_name
                         value: mild-temper
+                    args:
+                        - validate
             restartPolicy: Never
     backoffLimit: 4

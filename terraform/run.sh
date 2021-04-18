@@ -1,6 +1,7 @@
 #!/bin/sh
+TERRAFORM_COMMAND="$1"
 terraform init
-terraform apply -auto-approve
+terraform ${TERRAFORM_COMMAND}
 
 # Output the results so we can use it within Spinnaker
 # All outputs must be prefixed with SPINNAKER_PROPERTY
