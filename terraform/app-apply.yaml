@@ -25,7 +25,6 @@ spec:
                     -   name: TF_VAR_team_name
                         value: mild-temper
                     args:
-                      - apply
-                      - -auto-approve
+                      - 'apply -auto-approve'
             restartPolicy: Never
     backoffLimit: 4
