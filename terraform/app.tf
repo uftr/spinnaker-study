@@ -9,8 +9,8 @@ variable "team-name" {
 }
 
 resource "aws_instance" "web" {
-  ami           = "ami-0d6e8758b9f426d84"
-  instance_type = "t3.micro"
+  ami           = "ami-04542dadb1b2718d3"
+  instance_type = "t2.micro"
 
   tags = {
     Name = var.team-name
@@ -26,7 +26,7 @@ terraform {
    backend "s3" {
  # Replace this with your bucket name!
    bucket         = "ot-infra-state"
-   key            = "global/s3/terraform.tfstate"
+   key            = "global/s3/terraform-test.tfstate"
    region         = "us-east-1"
    }
 }
