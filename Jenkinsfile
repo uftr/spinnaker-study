@@ -20,7 +20,7 @@ node {
           s3Upload(file:'quarkus-microservice-chart.tar.gz', bucket:'opstree-helm-charts', path:"${JOB_NAME}/${BUILD_ID}/quarkus-microservice-chart.tar.gz")
         }
 	}
-	stage('Publish deb to Nexus') {
+	stage('Publish deb to Nexus ') {
 	   withCredentials([usernamePassword(credentialsId: 'nexus_passphrase', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_ADMIN')]) {
            sh "echo ${NEXUS_PASSWORD}"
            sh "curl -u ${NEXUS_ADMIN}:${NEXUS_PASSWORD} -H 'Content-Type: multipart/form-data' --data-binary '@./target/spinnaker-study_1.27_all.deb' 'http://nexus.mygurukulam.org:8081/repository/mild-temper-microservice/'"
