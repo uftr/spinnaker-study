@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-    name: mild-temper-terraform-app
+    name: team1-terraform-app
     namespace: microservices
 spec:
     template:
@@ -9,8 +9,8 @@ spec:
             namespace: microservices
         spec:
             containers:
-                -   name: mild-temper-terraform-app
-                    image: 702037529261.dkr.ecr.us-west-2.amazonaws.com/mild-temper-microservice-terraform
+                -   name: team1-terraform-app
+                    image: 702037529261.dkr.ecr.us-west-2.amazonaws.com/team1-microservice-terraform
                     env:
                     -   name: AWS_ACCESS_KEY_ID
                         valueFrom:
@@ -23,7 +23,7 @@ spec:
                                 name: aws-terraform-cred
                                 key: AWS_SECRET_ACCESS_KEY
                     -   name: TF_VAR_team_name
-                        value: mild-temper
+                        value: team1
                     args:
                       - destroy
             restartPolicy: Never
